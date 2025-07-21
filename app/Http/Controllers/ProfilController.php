@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
 
 class ProfilController extends Controller
 {
@@ -25,13 +25,11 @@ class ProfilController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:255',
-            'jabatan' => 'required|string|max:255',
             'password' => 'nullable|confirmed|min:6',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $user->nama = $request->nama;
-        $user->jabatan = $request->jabatan;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
@@ -39,12 +37,15 @@ class ProfilController extends Controller
 
         // Simpan foto jika ada
         if ($request->hasFile('foto')) {
-            if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
                 Storage::disk('public')->delete($user->foto); // Hapus yang lama
             }
 
-            $path = $request->file('foto')->store('foto_profil', 'public');
-            $user->foto = $path;
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('foto_profil', $filename, 'public');
+            
+            $user->photo = $path;
         }
 
         $user->save();

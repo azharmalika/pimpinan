@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PhpParser\Builder\Function_;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -11,7 +12,7 @@ class DashboardController extends Controller
         $data = array(
             "title"         =>"Dashboard",
             "menuDashboard" =>"active",
-            $totalUser = User::count(); // menghitung semua user
+            $totalUser = User::count(), // menghitung semua user
         );
         return view('dashboard',$data);
     }

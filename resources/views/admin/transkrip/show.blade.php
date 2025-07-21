@@ -3,8 +3,8 @@
 @section('content')
 <h1 class="h3 mb-4 text-gray-800">
     <i class="fas fa-table mr-2"></i>
-    Transkkrip Presensi:
-    {{$user->name }}
+    Transkrip Presensi:
+    {{$user->nama }}
 </h1>       
 <div class="card">
     <div class="card-body">
@@ -16,6 +16,7 @@
                         <th>Agenda</th>
                         <th>Waktu</th>
                         <th>Kategori</th>
+                        <th>Tempat</th>
                         <th>Kehadiran</th>
                         <th><i class="fas fa-cog"></i></th>
                     </tr>
@@ -28,7 +29,7 @@
                         <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('Y-m-d H:i') }}</td>
                         <td>{{ $item->kategori }}</td>
                         <td>{{ $item->tempat }}</td>
-                        <td><td>{{ $agenda->kehadiran ? 'Hadir' : 'Tidak' }}</td></td>
+                        <td>{{ $item->presensi?->hadir ? 'Hadir' : 'Tidak' }}</td>
 
                         <td class="text-center">
                             <a href="{{ route('agendaEdit', $item->id) }}" class="btn btn-sm btn-warning">

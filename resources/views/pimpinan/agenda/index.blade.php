@@ -7,16 +7,6 @@
         {{ $title }}
     </h1>  
 
-    <div class="card">
-        <div class="card-header d-flex flex-wrap justify-content-center justify-content-xl-between">
-            <div class="mb-1 mr-2">
-                <a href="{{ route('agendaCreate') }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus mr-2"></i>    
-                Tambah Data
-                </a>
-            </div> 
-        </div>
-    </div>
     <div class="row">
         @foreach ($user as $item)
             <div class="col-md-4 mb-3">

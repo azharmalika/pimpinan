@@ -15,4 +15,8 @@ class Agenda extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function presensi() {
+        return $this->hasOne(TranskripPresensi::class, 'agenda_id');
+    }
 }

@@ -37,7 +37,7 @@
                                     {{ auth()->user()->nama}}
                                 </span>
                                 <img class="img-profile rounded-circle"
-                                    src="{{ auth()->user()->foto ? asset('storage/' . auth()->user()->foto) : asset('sbadmin2/img/undraw_profile.svg') }}">
+                                    src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : asset('sbadmin2/img/undraw_profile.svg') }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

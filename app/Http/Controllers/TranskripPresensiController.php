@@ -16,7 +16,7 @@ class TranskripPresensiController extends Controller
             return view('admin.transkrip.index', [
                 'title' => 'Data agenda',
                 'menuAdminTranskrip' => 'active',
-                'agenda' => Agenda::with('user')->get(),
+                'agenda' => Agenda::with(['user', 'presensi'])->get(),
                 'user' => User::where('jabatan', 'pimpinan')->get(),
             ]);
         } elseif ($user->jabatan == 'Pimpinan') {
@@ -37,11 +37,9 @@ class TranskripPresensiController extends Controller
     public function show(User $user)
     {
         // Mengambil agenda milik user (pimpinan)
-        $agenda = $user->agenda()->latest()->get();
-
-        return view('admin.transkrip.show', [
-            'user' => $user,
-            'agenda' => $agenda,
-        ]);
+         $agenda = $user->agenda()
+        ->with(['presensi'])->latest()->get();
+        
+        return view('admin.transkrip.show', compact('user', 'agenda'));
     }
 }

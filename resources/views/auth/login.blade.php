@@ -46,10 +46,10 @@
                                     <form class="user" method="POST" action="{{ route('loginProses') }}">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user @error('email')
-                                             is-invalid @enderror" placeholder="Enter Email Address..." name="email"
-                                                value="{{ old('email') }}">
-                                            @error('email')
+                                            <input type="text" class="form-control form-control-user @error('emailOrUsername')
+                                             is-invalid @enderror" placeholder="Enter Email Address or Username..." name="emailOrUsername"
+                                                value="{{ old('emailOrUsername') }}">
+                                            @error('emailOrUsername')
                                                 <small class="text-danger">
                                                     {{ $message }}
                                                 </small>

@@ -9,7 +9,7 @@
 
         <div class="mb-3">
             <label>Nama</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}">
+            <input type="text" name="nama" class="form-control" value="{{ old('nama', $user->nama) }}">
         </div>
 
         <div class="mb-3">
@@ -36,8 +36,8 @@
 
         <div class="form-group">
             <label for="foto">Foto Profil</label><br>
-            @if($user->foto)
-                <img src="{{ asset('storage/' . $user->foto) }}" width="100" class="mb-2 rounded">
+            @if($user->photo)
+                <img src="{{ asset('storage/' . $user->photo) }}" width="100" class="mb-2 rounded">
             @endif
             <input type="file" name="foto" class="form-control-file">
         </div>

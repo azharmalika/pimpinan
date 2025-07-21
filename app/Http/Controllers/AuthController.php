@@ -2,38 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(){
+    public function login()
+    {
         return view('auth/login');
     }
-    public function loginProses(Request $request){
+    public function loginProses(Request $request)
+    {
         $request->validate([
-            'email'     =>'required',
-            'password'  =>'required|min:8',
-        ],[
-            'email.required'      =>'Email Tidak Boleh Kosong',
-            'password.required'   =>'Password Tidak Boleh Kosong',
-            'password.min'       
-             =>'Password Minimal 8 Karakter',
+            'emailOrUsername' => 'required|string',
+            'password'  => 'required|min:8',
+        ], [
+            'emailOrUsername.required'      => 'Email atau Username Tidak Boleh Kosong',
+            'password.required'             => 'Password Tidak Boleh Kosong',
+            'password.min'                  => 'Password Minimal 8 Karakter',
         ]);
 
-        $data=[
-            'email' =>$request->email,
-            'password'  =>$request->password,
+        $login_type = filter_var($request->emailOrUsername, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Buat array untuk percobaan login
+        $credentials = [
+            $login_type => $request->emailOrUsername,
+            'password' => $request->password,
         ];
 
-        if (\Illuminate\Support\Facades\Auth::attempt($data)){
+        if (Auth::attempt($credentials)) {
             return redirect()->route('dashboard');
         } else {
             return redirect()->back()->with('error', 'Email atau Password Salah');
         }
     }
 
-    public function logout (){
+    public function logout()
+    {
         Auth::logout();
 
         return redirect()->route('login')->with('success', 'Anda Berhasil Logout');

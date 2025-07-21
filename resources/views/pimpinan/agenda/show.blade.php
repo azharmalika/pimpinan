@@ -4,9 +4,11 @@
 <h1 class="h3 mb-4 text-gray-800">
     <i class="fas fa-table mr-2"></i>
     Jadwal Kegiatan dan Rapat:
-    {{$user->name }}
+    {{$user->nama }}
 </h1>       
 <div class="card">
+    
+@if($user->id == auth()->id())
     <div class="card-header d-flex flex-wrap justify-content-center justify-content-xl-between">
         <div class="mb-1 mr-2">
             <a href="{{ route('agendaCreate') }}" class="btn btn-sm btn-primary">
@@ -14,6 +16,7 @@
             </a>
         </div> 
     </div>
+@endif
 
     <div class="card-body">
         <div class="table-responsive">
@@ -34,7 +37,7 @@
                 </thead>
                 <tbody>
                     @forelse($agenda as $index => $item)
-                    <tr class="text-center">
+                    <tr class="text-center {{ $item->is_delegated ? 'bg-gray-200 text-dark' : '' }}">
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->judul }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('Y-m-d H:i') }}</td>
@@ -49,7 +52,34 @@
                                 No File
                             @endif
                         </td>
+                        @if($user->id == auth()->id())
+                        <td>
+                            @if($item->presensi?->hadir)
+                                <span class="badge badge-success">Hadir</span><br>
+                                <a href="{{ asset('storage/' . $item->presensi->file_kehadiran) }}" target="_blank" class="btn btn-sm btn-info mt-1">
+                                    Lihat Bukti
+                                </a>
+                                <form action="{{ route('agendaKehadiran') }}" method="POST" enctype="multipart/form-data" class="mt-2">
+                                    @csrf
+                                    <input type="hidden" name="agenda_id" value="{{ $item->id }}">
+                                    <input type="file" name="file_kehadiran" class="form-control-file mb-1" required>
+                                    <button type="submit" class="btn btn-sm btn-warning">Ganti Bukti</button>
+                                </form>
+                            @else
+                                <span class="badge badge-danger">Belum Hadir</span>
+                                <form action="{{ route('agendaKehadiran') }}" method="POST" enctype="multipart/form-data" class="mt-2">
+                                    @csrf
+                                    <input type="hidden" name="agenda_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                    <input type="hidden" name="pimpinan" value="{{ $user->nama }}">
+                                    <input type="file" name="file_kehadiran" class="form-control-file mb-1" required>
+                                    <button type="submit" class="btn btn-sm btn-success">Upload Bukti</button>
+                                </form>
+                            @endif
+                        </td>
+                        @else
                         <td>{{ $item->kehadiran ?? 0 }}</td>
+                        @endif
                         <td class="text-center">
                             <a href="{{ route('agendaEdit', $item->id) }}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i>
@@ -71,6 +101,8 @@
     </div>
 </div>
 
+@if($user->id == auth()->id())
+
 {{-- Delegasi Agenda ke Pimpinan Lain --}}
 <h2 class="text-xl font-semibold mb-3">Delegasikan Agenda</h2>
 
@@ -80,22 +112,26 @@
         <select name="agenda_id" class="border px-3 py-2 rounded w-full md:w-1/3" required>
             <option value="">-- Pilih Agenda --</option>
             @foreach($agenda as $item)
-                <option value="{{ $item->id }}">{{ $item->judul }}</option>
+                @if(!$item->presensi)
+                    <option value="{{ $item->id }}">{{ $item->judul }}</option>
+                @endif
             @endforeach
         </select>
 
         <select name="user_id" class="border px-3 py-2 rounded w-full md:w-1/3" required>
             <option value="">-- Pilih Pimpinan Tujuan --</option>
-            @foreach(App\Models\User::where('id', '!=', $user->id)->where('is_tugas', true)->get() as $pimpinan)
+            @foreach(App\Models\User::where('id', '!=', $user->id)->where('jabatan', 'Pimpinan')->get() as $pimpinan)
                 <option value="{{ $pimpinan->id }}">{{ $pimpinan->nama }}</option>
             @endforeach
         </select>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <button type="submit" class="btn btn-primary text-white px-4 py-2 rounded hover:bg-blue-600">
             Delegasikan
         </button>
     </div>
 </form>
+
+@endif
 
 <a href="{{ route('agenda') }}" class="block mt-6 text-blue-600 hover:underline">← Kembali ke daftar pimpinan</a>
 @endsection

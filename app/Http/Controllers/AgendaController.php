@@ -49,8 +49,17 @@ class AgendaController extends Controller
     return view('welcome', compact('agendaHariIni'));    }
 
     public function show(User $user) {
-        $agenda = $user->agenda()->latest()->get();
-        return view('admin.agenda.show', compact('user', 'agenda'));
+        $agenda = $user->agenda()
+        ->with(['presensi'])->latest()->get();
+
+
+        if (Auth::user()->jabatan == 'Admin') {
+           return view('admin.agenda.show', compact('user', 'agenda'));
+        } elseif (Auth::user()->jabatan == 'Pimpinan') {
+            return view('pimpinan.agenda.show', compact('user', 'agenda'));
+        } else {
+            abort(403, 'Akses ditolak.');
+        }
     }
 
     public function uploadKehadiran(Request $request)
@@ -61,7 +70,8 @@ class AgendaController extends Controller
         ]);
     
         $agendaId = $request->agenda_id;
-        $userId = auth()->id();
+        $userId = $request->user_id;
+        $pimpinan = $request->pimpinan;
     
         // Upload file
         $file = $request->file('file_kehadiran');
@@ -79,7 +89,7 @@ class AgendaController extends Controller
             DB::table('transkrip_presensis')
                 ->where('id', $existing->id)
                 ->update([
-                    'file' => $path,
+                    'file_kehadiran' => $path,
                     'updated_at' => now(),
                 ]);
         } else {
@@ -87,7 +97,9 @@ class AgendaController extends Controller
             DB::table('transkrip_presensis')->insert([
                 'agenda_id' => $agendaId,
                 'user_id' => $userId,
-                'file' => $path,
+                'pimpinan' => $pimpinan,
+                'hadir' => true,
+                'file_kehadiran' => $path,
                 'created_at' => now(),
             ]);
         }
@@ -224,6 +236,7 @@ class AgendaController extends Controller
 
     $agenda = Agenda::findOrFail($request->agenda_id);
     $agenda->user_id = $request->user_id;
+    $agenda->is_delegated = true; // Tandai agenda sebagai didelegasikan
     $agenda->save();
 
     return redirect()->route('agenda')->with('success', 'Agenda berhasil didelegasikan.');

@@ -79,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('agenda/delegate', [AgendaController::class, 'delegate'])->name('agendaDelegate');
         
         Route::get('/transkrip', [TranskripPresensiController::class, 'index'])->name('transkrip.index');
-        Route::get('/transkrip/{pimpinan}', [TranskripPresensiController::class, 'show'])->name('transkrip.show');
+        Route::get('/transkrip/{user}', [TranskripPresensiController::class, 'show'])->name('transkrip.show');
 
         
     });
@@ -99,7 +99,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('agenda/delegate', [AgendaController::class, 'delegate'])->name('agendaDelegate');
        
         Route::get('/transkrip', [TranskripPresensiController::class, 'index'])->name('transkrip.index');
-        Route::get('/transkrip/{pimpinan}', [TranskripPresensiController::class, 'show'])->name('transkrip.show');
+        Route::get('/transkrip/{user}', [TranskripPresensiController::class, 'show'])->name('transkrip.show');
 
 
     });

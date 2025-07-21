@@ -4,9 +4,7 @@
 <h1 class="h3 mb-4 text-gray-800">
     <i class="fas fa-calendar-plus mr-2"></i>
     Tambah Agenda Baru - 
-    @if(isset($selectedUser))
-    - {{ $selectedUser->name }}
-@endif
+    {{ auth()->user()->nama }}
 </h1>
 
 <div class="card shadow">
@@ -17,12 +15,10 @@
             <!-- Pilih Pimpinan -->
             <div class="form-group">
                 <label for="user_id">Pilih Pimpinan</label>
-                <select name="user_id" class="form-control" required>
-                    <option value="">-- Pilih Pimpinan --</option>
-                    @foreach($user as $item)
-                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                    @endforeach
-                </select>
+                <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                    <select class="form-control" disabled>
+                        <option>{{ auth()->user()->nama }}</option>
+                    </select>
             </div>
 
             <div class="form-group mb-3">
@@ -34,10 +30,6 @@
                 <div class="col-md-6 mb-3">
                     <label for="tanggal_mulai">Tanggal & Waktu Mulai</label>
                     <input type="datetime-local" name="tanggal_mulai" class="form-control" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="tanggal_selesai">Tanggal & Waktu Selesai</label>
-                    <input type="datetime-local" name="tanggal_selesai" class="form-control" required>
                 </div>
             </div>
 

@@ -5,7 +5,7 @@
     <i class="fas fa-calendar-plus mr-2"></i>
     Tambah Agenda Baru - 
     @if(isset($selectedUser))
-    - {{ $selectedUser->name }}
+    - {{ $selectedUser->nama }}
 @endif
 </h1>
 

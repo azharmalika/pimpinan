@@ -27,7 +27,7 @@ class User extends Authenticatable
     ];
 
     public function agenda(){
-        return $this->hasOne(Agenda::class);
+        return $this->hasMany(Agenda::class);
     }
 
     /**
